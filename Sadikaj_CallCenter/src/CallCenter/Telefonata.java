@@ -10,36 +10,38 @@ public class Telefonata {
 	private Operatore o;
 	private LocalDateTime dataOraInizio;
 	private LocalDateTime dataOraFine;
-	private String numero; // numero di telefono del chiamante, non dell'operatore
+	private Cliente c;
 
-	public Telefonata(Operatore o, LocalDateTime dataOraInizio, LocalDateTime dataOraFine, String numero) {
+	public Telefonata(Operatore o, LocalDateTime dataOraInizio, LocalDateTime dataOraFine, Cliente c) {
 		super();
 		this.o = o;
 		this.dataOraInizio = dataOraInizio;
 		this.dataOraFine = dataOraFine;
+		this.c = c;
 	}
 
 	public Telefonata(Telefonata t) {
 		super();
+		this.o = t.o;
 		this.dataOraInizio = t.dataOraInizio;
 		this.dataOraFine = t.dataOraFine;
-		this.numero = t.numero;
+		this.c = t.c;
 	}
 	
 	public Operatore getOperatore() {
 		return this.o;
 	}
 	
-	public String getNumero() {
-		return numero;
+	public Cliente getCliente() {
+		return this.c;
 	}
 
 	public LocalDateTime getDataOraInizio() {
-		return dataOraInizio;
+		return this.dataOraInizio;
 	}
 
 	public LocalDateTime getDataOraFine() {
-		return dataOraFine;
+		return this.dataOraFine;
 	}
 
 	public long durata() {
@@ -53,4 +55,7 @@ public class Telefonata {
 	}
 	
 	
+	public String toString() {
+		return String.format("| %-10s | %-16s | %-14s |\n", c.getCodice(), toStringDateTime(dataOraInizio), toStringDateTime(dataOraFine));
+	}
 }

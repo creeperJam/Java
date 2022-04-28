@@ -57,6 +57,7 @@ public class Cliente {
 		this.ultima = ultima;
 	}
 	
-	
-	
+	public String toString() {
+		return String.format("| %-10s | %-26s | %-10s |", codice, (nome + cognome), telefono);
+	}
 }

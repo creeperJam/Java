@@ -2,6 +2,7 @@ package CallCenter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ public class CallCenter {
 	private Map<String, Cliente> clienti;
 	private Map<String, Operatore> operatori;
 	private Map<String, List<Telefonata>> telefonate;
+	Input in = new Input();
 
 	public CallCenter() {
 		clienti = new HashMap<>();
@@ -19,7 +21,18 @@ public class CallCenter {
 		telefonate = new HashMap<>();
 	}
 
-	public void inserisciOperatore(Operatore o) {
+	private Operatore infoOp() {
+		return new Operatore(in.inputString("Codice operatore:"), in.inputString("Nome operatore:"),
+				in.inputString("Cognome operatore:"));
+	}
+
+	private Cliente infoCliente() {
+		return new Cliente(in.inputString("Codice cliente:"), in.inputString("Nome cliente:"),
+				in.inputString("Cognome cliente:"), in.inputPhoneNumber(), null);
+	}
+
+	public void inserisciOperatore() {
+		Operatore o = infoOp();
 		operatori.put(o.getCodice(), o);
 	}
 
@@ -29,7 +42,8 @@ public class CallCenter {
 		return operatori.remove(c) != null;
 	}
 
-	public void inserisciOperatore(Cliente c) {
+	public void inserisciCliente() {
+		Cliente c = infoCliente();
 		clienti.put(c.getCodice(), c);
 	}
 
@@ -51,38 +65,49 @@ public class CallCenter {
 		return telefonate;
 	}
 
-	public void riceviChiamata() {
+	public boolean stampaChiamate(String codice) {
+		if (!telefonate.containsKey(codice))
+			return false;
 
-		if (clienti.isEmpty()) {
-			System.out.println(
-					"Nessun cliente presente nel sistema. Inserire almeno un cliente nel sistema e riprovare.");
-			return;
+		List<Telefonata> telefonate = this.telefonate.get(codice);
+		
+		telefonate.sort(Comparator.comparing(Telefonata::getDataOraInizio));
+
+		System.out.println("Chiamate ricevute dall'operatore " + codice);
+		System.out.println("----------------------------------------------------");
+		System.out.printf("");
+		for (Telefonata t : telefonate) {
+			System.out.println(t.toString());
 		}
 
+		return true;
+	}
+
+	public Operatore ricercaOperatore(String codice) {
+		if (operatori.containsKey(codice))
+			return operatori.get(codice);
+		return null;
+	}
+
+	public void riceviChiamata(String numero) {
 		if (operatori.isEmpty()) {
 			System.out.println("Nessun operatore disponibile al momento.");
 			return;
 		}
-
-		Random random = new Random();
-		Input in = new Input();
-		List<Cliente> clientiPresenti = new ArrayList<>(clienti.values());
-
-		System.out.println("---------Clienti---------");
-		for (Cliente c : clientiPresenti) {
-			System.out.printf("| %-4d) %-12s %-12s |", clientiPresenti.indexOf(c), c.getNome(), c.getCognome());
+		if (clienti.isEmpty()) {
+			System.out.println("Nessun cliente presente nel sistema. Inserire almeno un cliente nel sistema.");
+			return;
 		}
-		System.out.println("-------------------------");
-
-		int index = in.inputInt("Cliente scelto:", 1, clienti.size()) - 1;
+		if (!clienti.containsKey(numero)) {
+			System.out.println("Nessun cliente presente nel sistema col numero di telefono inserito.");
+			return;
+		}
 
 		Operatore[] operatoriPresenti = operatori.values().toArray(new Operatore[0]);
-		Operatore o;
-		do {
-			o = operatoriPresenti[random.nextInt(operatoriPresenti.length)];
-		} while (o == null);
+		Random random = new Random();
+		Cliente c = clienti.get(numero);
+		Operatore o = operatoriPresenti[random.nextInt(operatoriPresenti.length)];
 
-		Cliente c = clientiPresenti.get(index);
 		System.out.printf("Chiamata in arrivo da: %s %s - codice: %s\n", c.getNome(), c.getCognome(), c.getCodice());
 		System.out.printf("Operatore in risposta: %s %s - codice: %s\n", o.getNome(), o.getCognome(), o.getCodice());
 
@@ -90,11 +115,12 @@ public class CallCenter {
 		LocalDateTime dataOraFine;
 
 		System.out.println("Chiamata iniziata");
-		while (in.inputInt("Premere 0 per terminare:") != 0);
+		while (in.inputInt("Premere 0 per terminare:") != 0)
+			;
 		System.out.println("Chiamata terminata");
 		dataOraFine = LocalDateTime.now();
 
-		Telefonata t = new Telefonata(o, dataOraInizio, dataOraFine, c.getTelefono());
+		Telefonata t = new Telefonata(o, dataOraInizio, dataOraFine, c);
 		List<Telefonata> temp = new ArrayList<>();
 
 		temp.add(t);

@@ -38,6 +38,7 @@ public class Operatore {
 		this.cognome = cognome;
 	}
 	
-	
-	
+	public String toString() {
+		return String.format("| %-10s | %-26s |", codice, (nome + cognome));
+	}
 }
