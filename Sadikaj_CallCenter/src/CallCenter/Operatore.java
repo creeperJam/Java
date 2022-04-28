@@ -1,7 +1,13 @@
 package CallCenter;
 
-public class Operatore {
+import java.io.Serializable;
+
+public class Operatore implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String codice;
 	private String nome;
 	private String cognome;

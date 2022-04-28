@@ -1,7 +1,13 @@
 package CallCenter;
 
-public class Cliente {
+import java.io.Serializable;
+
+public class Cliente implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String codice;
 	private String nome;
 	private String cognome;
@@ -58,6 +64,6 @@ public class Cliente {
 	}
 	
 	public String toString() {
-		return String.format("| %-10s | %-26s | %-10s |", codice, (nome + cognome), telefono);
+		return String.format("| %-10s | %-26s | %-10s |", codice, (nome + " " + cognome), telefono);
 	}
 }

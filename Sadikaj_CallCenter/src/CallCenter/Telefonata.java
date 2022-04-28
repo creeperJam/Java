@@ -2,11 +2,16 @@ package CallCenter;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class Telefonata {
+public class Telefonata implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Operatore o;
 	private LocalDateTime dataOraInizio;
 	private LocalDateTime dataOraFine;
