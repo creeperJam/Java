@@ -1,5 +1,3 @@
-package ProblemaProduttoreConsumatore.src;
-
 public class Risorsa {
 	private int val;
 	private boolean disponibile;
@@ -10,14 +8,16 @@ public class Risorsa {
 	}
 	
 	public synchronized int consuma() {
+		
 		while ( disponibile == false ) {
 			try {
+				System.out.println("Il Thread del " + Thread.currentThread().getName() + " e' in attesa.");
 				wait();
 			} catch (InterruptedException e) {
 			}
 		}
 		disponibile = false;
-		System.out.println("Consumato valore " + val);
+		System.out.println(Thread.currentThread().getName() + " sta consumando valore -> " + val);
 		notifyAll();
 		return val;
 	}
